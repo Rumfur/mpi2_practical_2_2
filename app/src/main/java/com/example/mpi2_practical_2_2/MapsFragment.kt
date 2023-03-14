@@ -1,6 +1,5 @@
 package com.example.mpi2_practical_2_2
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
@@ -20,29 +19,38 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsFragment : Fragment() {
-    private var map: GoogleMap? = null
-    private var cameraPosition: CameraPosition? = null
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val defaultLocation = LatLng(57.537233, 25.412659)
     private var locationPermissionGranted = false
     private var lastKnownLocation: Location? = null
+    private var map: GoogleMap? = null
 
     private val callback = OnMapReadyCallback { googleMap ->
+        map = googleMap
         val ahhMeat = LatLng(57.537233, 25.412659)
-        googleMap.addMarker(MarkerOptions().position(ahhMeat).title("Ahh-Meat"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(ahhMeat))
+        googleMap.addMarker(MarkerOptions().position(ahhMeat).title("Ahh-Meat").snippet("Godly level kebabs").
+        icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)))
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLng(ahhMeat))
         val vinkalni = LatLng(57.53895508946391, 25.428352788987894)
-        googleMap.addMarker(MarkerOptions().position(vinkalni).title("Vinkalni-Pizza"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(vinkalni))
+        googleMap.addMarker(MarkerOptions().position(vinkalni).title("Vinkalni-Pizza").snippet("Possibly the best pizza in Valmiera").
+                icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)))
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLng(vinkalni))
         val strops = LatLng(57.52269267588153, 25.440794352093324)
-        googleMap.addMarker(MarkerOptions().position(strops).title("Strops-Pizza"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(strops))
+        googleMap.addMarker(MarkerOptions().position(strops).title("Strops-Pizza").snippet("Amazing pizza by the rail station").
+        icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLng(strops))
 
+        // Prompt the user for permission.
+        getLocationPermission()
+        // Turn on the My Location layer and the related control on the map.
+        updateLocationUI()
+        // Get the current location of the device and set the position of the map.
+        getDeviceLocation()
     }
 
     override fun onCreateView(
@@ -50,14 +58,7 @@ class MapsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
         ): View? {
-        fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireActivity())
-        getLocationPermission()
-        // [END_EXCLUDE]
-        // Turn on the My Location layer and the related control on the map.
-        updateLocationUI()
-        // Get the current location of the device and set the position of the map.
-        getDeviceLocation()
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 
